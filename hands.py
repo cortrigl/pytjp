@@ -10,12 +10,12 @@ class EvaluateHand(object):
         self.PAYOUT_HAND = 10
         self.hand = hand
         self.low_hands = {
-            17: 'Four-of-a-kind',
-            13: 'Full house',
-            11: 'Three-of-a-kind',
-            9: 'Two pair',
+            17: ('Four-of-a-kind', "FOUR-OF-A-KIND!"),
+            13: ('Full house', "A FULL HOUSE!"),
+            11: ('Three-of-a-kind', "THREE-OF-A-KIND!"),
+            9: ('Two pair', "TWO PAIR!"),
             7: 'One pair',
-            5: 'Nothing'
+            5: ('Nothing', "NOTHING.")
         }
 
     def read_hand(self):
@@ -31,21 +31,21 @@ class EvaluateHand(object):
                 ''' A straight flush '''
                 if max(values) == 14:
                     ''' A royal flush '''
-                    return "Royal flush"
-                return "Straight flush"
-            return "Straight"
+                    return ("Royal flush", "A ROYAL FLUSH!")
+                return ("Straight flush", "A STRAIGHT FLUSH!")
+            return ("Straight", "A STRAIGHT!")
 
         if self.is_same(suits):
             ''' Non-straight Flush '''
-            return "Flush"
+            return ("Flush", "A FLUSH!")
         total = sum([values.count(x) for x in values])
         if total == 7:
             for x in values:
                 if values.count(x) > 1:
-                    if x > self.PAYOUT_HAND:
-                        return "One pair"
+                    if x >= self.PAYOUT_HAND or x == 1:
+                        return ("One pair", "A HIGH PAIR!")
                     else:
-                        return "Nothing"
+                        return ("Nothing", "A LOW PAIR.")
 
         return self.low_hands[total]
 

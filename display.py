@@ -49,12 +49,11 @@ class Render(object):
                 # card_sel.reset()
                 card_sel.draw_card_selector()
                 ret = card_disp.deal_hand()
-                curr_hand.main(ret)
+                curr_hand.main(ret[0])
                 card_sel.menu(card_disp)
 
                 ret = card_disp.deal_hand()
-                curr_hand.main(ret)
-                # card_sel.menu()
+                curr_hand.main(ret[0])
 
                 self.stdscr.getch()
             else:
