@@ -33,7 +33,14 @@ class CurrentHandPanel(object):
         normal_color = self.cmap.colors['white_bg']
 
         for key in self.name_pos_map.keys():
+            y = self.name_pos_map[key]
+            x = 0
+            self.win.addstr(y, x, '[', normal_color)
+            x += 2
+            self.win.addstr(y, x, ']', normal_color)
+            x += 2
             if key == hand_to_highlight:
-                self.win.addstr(self.name_pos_map[key], x, key, hl_color)
+                self.win.addstr(y, x, key, hl_color)
+                self.win.addstr(y, 1, u'\u2714', hl_color)
             else:
-                self.win.addstr(self.name_pos_map[key], x, key, normal_color)
+                self.win.addstr(y, x, key, normal_color)
