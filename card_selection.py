@@ -11,11 +11,12 @@ class CardSelect(object):
         self.hand = hand.hand
         self.win = win
 
-    def main(self):
+    def menu(self, hand):
         '''
         main() is called after cards are dealt
         provides a loop to capture discard choices
         '''
+        self.hand = hand.hand
 
         while True:
             c = self.win.getch()
@@ -39,7 +40,7 @@ class CardSelect(object):
     def reset(self):
         self.win.clear()
         self.selected_cards = []
-        self.draw_card_selector()
+        # self.draw_card_selector()
         self.win.refresh()
 
     def discard(self):
@@ -80,5 +81,3 @@ class CardSelect(object):
             x += 1
             self.win.addstr(y, x, ")", self.cmap.colors['white_bg'])
             x += 9
-
-        self.win.refresh()
