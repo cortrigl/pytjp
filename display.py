@@ -8,6 +8,7 @@ from hands import Hand
 from card_selection import CardSelect
 from info_panel import InfoPanel
 from windows import initWindow
+from current_hand import CurrentHandPanel
 
 
 class Render(object):
@@ -27,22 +28,27 @@ class Render(object):
         hs_win = init_win.create('handdisplay', 'blue_card')
         cs_win = init_win.create('cardselect', 'blue_card')
         ip_win = init_win.create('infopanel', 'blue_stat')
+        ch_win = init_win.create('currenthand', 'blue_card')
 
         hs = Hand(hs_win)
         ip = InfoPanel(ip_win)
-        ip.main()
-
+        ch = CurrentHandPanel(ch_win)
         cs = CardSelect(cs_win, hand=hs)
-        cs_win = cs.draw_card_selector()
-
         while True:
+            ip.main()
+            ch.main()
+            cs.draw_card_selector()
+
             c = self.stdscr.getch()
             if c == ord('q'):
                 self.shutdown()
             elif c == ord('d'):
-                hs.deal_hand()
+                ret = hs.deal_hand()
+                ch.main(ret)
                 cs.main()
                 hs.deal_hand()
+                ch.main(ret)
+                self.stdscr.getch()
             elif c == ord(' '):
                 '''
                 For testing purposes - this drains the deck after

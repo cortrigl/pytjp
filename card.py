@@ -86,11 +86,7 @@ class Card(object):
         self.value = str(val)
 
     def deal_cards(self):
-        print("len(hand) in Card1: {}".format(len(self.hand)),
-              file=open('/tmp/tjp.log', 'a'))
         num_cards_to_deal = 5 - len(self.hand)
         for i in range(num_cards_to_deal):
             (val, suit) = self.deck.deck.pop()
             self.hand.append((val, suit))
-        print("len(hand) in Card2: {}".format(len(self.hand)),
-              file=open('/tmp/tjp.log', 'a'))

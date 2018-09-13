@@ -6,12 +6,12 @@ class EvaluateHand(object):
         self.PAYOUT_HAND = 10
         self.hand = hand
         self.low_hands = {
-            17: 'four of a kind!',
-            13: 'a full house!',
-            11: 'three of a kind!',
-            9: 'two pair!',
-            7: 'pair',
-            5: 'nothing.'
+            17: 'Four-of-a-kind',
+            13: 'Full house',
+            11: 'Three-of-a-kind',
+            9: 'Two pair',
+            7: 'One pair',
+            5: 'Nothing'
         }
 
     def read_hand(self):
@@ -27,21 +27,21 @@ class EvaluateHand(object):
                 ''' A straight flush '''
                 if max(values) == 14:
                     ''' A royal flush '''
-                    return "a royal flush!"
-                return "a straight flush!"
-            return "a straight!"
+                    return "Royal flush"
+                return "Straight flush"
+            return "Straight"
 
         if self.is_same(suits):
             ''' Non-straight Flush '''
-            return "a flush!"
+            return "Flush"
         total = sum([values.count(x) for x in values])
         if total == 7:
             for x in values:
                 if values.count(x) > 1:
                     if x > self.PAYOUT_HAND:
-                        return "a high pair!"
+                        return "One pair"
                     else:
-                        return "a low pair."
+                        return "Nothing"
 
         return self.low_hands[total]
 
@@ -76,11 +76,7 @@ class Hand(object):
         self.card = Card(hand=self)
         y = 0
         x = 1
-        print("len(hand) in Hand1: {}".format(len(self.hand)),
-              file=open("/tmp/tjp.log", 'a'))
         self.card.deal_cards()
-        print("len(hand) in Hand2: {}".format(len(self.hand)),
-              file=open("/tmp/tjp.log", 'a'))
         for c in range(len(self.hand)):
             self.card.render_card(self.win, y, x,
                                   self.hand[c][0],

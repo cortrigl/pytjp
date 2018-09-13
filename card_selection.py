@@ -10,8 +10,6 @@ class CardSelect(object):
         self.cmap = ColorMap()
         self.hand = hand.hand
         self.win = win
-        print("len(hand): {}".format(len(self.hand)),
-              file=open("/tmp/tjp.log", 'a'))
 
     def main(self):
         '''
@@ -33,15 +31,14 @@ class CardSelect(object):
                 self.select_card(5)
             elif c == curses.KEY_ENTER or c == 13 or c == 10:
                 self.discard()
-                return
+                break
             elif c == ord('q'):
-                return
+                break
+        return
 
     def discard(self):
         for c in reversed(self.selected_cards):
             v, s = self.hand.pop(c - 1)
-            print("in discard: popping element {}: {}, {}".format(
-                c - 1, v, s), file=open("/tmp/tjp.log", 'a'))
 
     def select_card(self, card_number):
         '''
@@ -66,6 +63,7 @@ class CardSelect(object):
         select_color = self.cmap.colors['yellow_bg'] | curses.A_BOLD
         select_color |= normal_color
         card_numbers = [1, 2, 3, 4, 5]
+        self.win.clear()
         for i in card_numbers:
             self.win.addstr(y, x, "(", self.cmap.colors['white_bg'])
             x += 1

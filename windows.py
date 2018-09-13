@@ -12,8 +12,6 @@ class initWindow(object):
     def create(self, w_name, color_name):
         bg_color = self.cmap.colors[color_name]
         (height, width, y, x) = self.setPosition(w_name)
-        print("{} : {} : {} : {}".format(height, width, y, x),
-              file=open("/tmp/tjp.log",'a'))
         win = curses.newwin(height, width, y, x)
         win.bkgd(bg_color)
         win.refresh()
@@ -75,10 +73,11 @@ class hsWindow(object):
 class chWindow(object):
     ''' Type of current hand (full house, etc.) '''
     def __init__(self, mh, mw):
-        height = 1
-        width = 60
-        y = mh - (height + 14)
-        x = mw // 2 - 30
+        height = 12
+        width = 20
+        y = mh - (height + 20)
+        x = 2
+        # x = mw // 2 - 30
         self.window_data = (height, width, y, x)
 
     def getWinSizePos(self):
