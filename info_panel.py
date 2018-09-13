@@ -10,6 +10,7 @@ class InfoPanel(object):
         self.win = win
 
     def main(self):
+        self.win.clear()
         self.draw_info_panel()
         self.win.refresh()
 
