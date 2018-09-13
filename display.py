@@ -9,6 +9,7 @@ from card_selection import CardSelect
 from info_panel import InfoPanel
 from windows import initWindow
 from current_hand import CurrentHandPanel
+from title_bar import TitleBar
 
 
 class Render(object):
@@ -21,7 +22,7 @@ class Render(object):
 
     def main(self):
         self.cmap = ColorMap()
-        self.stdscr.bkgd(self.cmap.colors['blue_card'])
+        self.stdscr.bkgd(self.cmap.colors['black_card'])
         self.stdscr.clear()
         self.stdscr.refresh()
         init_win = initWindow(self.max_height, self.max_width, self.cmap)
@@ -30,11 +31,13 @@ class Render(object):
         ip_win = init_win.create('infopanel', 'blue_stat')
         ch_win = init_win.create('currenthand', 'blue_card')
 
+        title = TitleBar(self.stdscr)
         card_disp = Hand(hs_win)
         # card_disp.reset()
         info_bar = InfoPanel(ip_win)
         curr_hand = CurrentHandPanel(ch_win)
         card_sel = CardSelect(cs_win, hand=card_disp)
+        title.reset()
 
         while True:
             info_bar.main()
