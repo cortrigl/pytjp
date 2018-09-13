@@ -22,8 +22,6 @@ class CurrentHandPanel(object):
         }
 
     def main(self, hl_hand=None):
-        print("in current_hand: {}".format(hl_hand),
-              file=open('/tmp/tjp.log', 'a'))
         self.win.clear()
         self.draw_panel(hl_hand)
         self.win.refresh()
