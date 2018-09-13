@@ -10,6 +10,7 @@ from info_panel import InfoPanel
 from windows import initWindow
 from current_hand import CurrentHandPanel
 from title_bar import TitleBar
+from dropshadow import DropShadow
 
 
 class Render(object):
@@ -26,6 +27,8 @@ class Render(object):
         self.stdscr.clear()
         self.stdscr.refresh()
         init_win = initWindow(self.max_height, self.max_width, self.cmap)
+        dropshadow = DropShadow(self.max_height, self.max_width)
+        dropshadow.reset()
         hs_win = init_win.create('handdisplay', 'blue_card')
         cs_win = init_win.create('cardselect', 'blue_card')
         ip_win = init_win.create('infopanel', 'blue_stat')

@@ -45,11 +45,25 @@ class initWindow(object):
             'currenthand': chWindow,
             'titlebar': titleWindow,
             'titleline1': titleLineOne,
-            'titleline2': titleLineTwo
+            'titleline2': titleLineTwo,
+            'dropshadow': dsWindow
         }
         win_class = wins_to_positions[window_name](
             self.max_h, self.max_w, self.h, self.w)
         return win_class.getWinSizePos()
+
+
+class dsWindow(object):
+    ''' Drop shadow window '''
+    def __init__(self, mh, mw, h, w):
+        height = mh - 4
+        width = mw - 3
+        y = 3
+        x = 1
+        self.window_data = (height, width, y, x)
+
+    def getWinSizePos(self):
+        return self.window_data
 
 
 class csWindow(object):
