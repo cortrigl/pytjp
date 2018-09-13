@@ -30,37 +30,33 @@ class Render(object):
         ip_win = init_win.create('infopanel', 'blue_stat')
         ch_win = init_win.create('currenthand', 'blue_card')
 
-        hs = Hand(hs_win)
-        hs.reset()
-        ip = InfoPanel(ip_win)
-        ch = CurrentHandPanel(ch_win)
-        cs = CardSelect(cs_win, hand=hs)
+        card_disp = Hand(hs_win)
+        # card_disp.reset()
+        info_bar = InfoPanel(ip_win)
+        curr_hand = CurrentHandPanel(ch_win)
+        card_sel = CardSelect(cs_win, hand=card_disp)
+
         while True:
-            ip.main()
-            ch.main()
-            cs.reset()
+            info_bar.main()
+            curr_hand.main()
+            card_disp.reset()
+            card_sel.reset()
 
             c = self.stdscr.getch()
             if c == ord('q'):
                 self.shutdown()
             elif c == ord('d'):
-                ret = hs.deal_hand()
-                print("return: {}".format(ret),
-                      file=open('/tmp/tjp.log', 'a'))
-                ch.main(ret)
-                cs.main()
-                ret = hs.deal_hand()
-                ch.main(ret)
-                print("return2: {}".format(ret),
-                      file=open('/tmp/tjp.log', 'a'))
+                # card_sel.reset()
+                card_sel.draw_card_selector()
+                ret = card_disp.deal_hand()
+                curr_hand.main(ret)
+                card_sel.menu(card_disp)
+
+                ret = card_disp.deal_hand()
+                curr_hand.main(ret)
+                # card_sel.menu()
+
                 self.stdscr.getch()
-                hs.reset()
-            elif c == ord(' '):
-                '''
-                For testing purposes - this drains the deck after
-                9 hits.
-                '''
-                hs.deal_hand(hs_win)
             else:
                 self.stdscr.addstr("Unrecognized key.")
 
