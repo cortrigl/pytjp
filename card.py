@@ -17,6 +17,7 @@ class Card(object):
         self.bg_color = curses.A_BOLD
         self.bg_color |= self.cmap.colors['white_card']
         self.deck = Deck()
+        self.deck.new_deck()
         self.deck.card_mapping()
         self.hand = hand.hand
 
@@ -85,7 +86,10 @@ class Card(object):
 
         self.value = str(val)
 
-    def deal_cards(self):
+    def deal_cards(self, new_deal=True):
+        if new_deal:
+            self.deck.new_deck()
+
         num_cards_to_deal = 5 - len(self.hand)
         for i in range(num_cards_to_deal):
             (val, suit) = self.deck.deck.pop()

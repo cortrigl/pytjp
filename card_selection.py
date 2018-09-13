@@ -36,6 +36,12 @@ class CardSelect(object):
                 break
         return
 
+    def reset(self):
+        self.win.clear()
+        self.selected_cards = []
+        self.draw_card_selector()
+        self.win.refresh()
+
     def discard(self):
         for c in reversed(self.selected_cards):
             v, s = self.hand.pop(c - 1)

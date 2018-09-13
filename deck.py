@@ -7,6 +7,9 @@ import itertools
 class Deck(object):
     ''' Deck of cards class '''
     def __init__(self):
+        self.deck = []
+
+    def new_deck(self):
         self.deck = list(itertools.product(
             range(1, 14), ['spades', 'hearts', 'diamonds', 'clubs']))
         self.shuffle_deck()

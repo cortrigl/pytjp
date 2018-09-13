@@ -31,24 +31,30 @@ class Render(object):
         ch_win = init_win.create('currenthand', 'blue_card')
 
         hs = Hand(hs_win)
+        hs.reset()
         ip = InfoPanel(ip_win)
         ch = CurrentHandPanel(ch_win)
         cs = CardSelect(cs_win, hand=hs)
         while True:
             ip.main()
             ch.main()
-            cs.draw_card_selector()
+            cs.reset()
 
             c = self.stdscr.getch()
             if c == ord('q'):
                 self.shutdown()
             elif c == ord('d'):
                 ret = hs.deal_hand()
+                print("return: {}".format(ret),
+                      file=open('/tmp/tjp.log', 'a'))
                 ch.main(ret)
                 cs.main()
-                hs.deal_hand()
+                ret = hs.deal_hand()
                 ch.main(ret)
+                print("return2: {}".format(ret),
+                      file=open('/tmp/tjp.log', 'a'))
                 self.stdscr.getch()
+                hs.reset()
             elif c == ord(' '):
                 '''
                 For testing purposes - this drains the deck after

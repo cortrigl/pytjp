@@ -3,6 +3,10 @@
 
 class EvaluateHand(object):
     def __init__(self, hand):
+        '''
+        Need to work on exceptions for aces. They're being treated as
+        low pairs and not part of a straight (or straight flush)
+        '''
         self.PAYOUT_HAND = 10
         self.hand = hand
         self.low_hands = {
@@ -57,6 +61,7 @@ class Hand(object):
     def __init__(self, win):
         self.win = win
         self.hand = []
+        self.new_deal = True
 
     def card_window(self):
         '''
@@ -64,6 +69,12 @@ class Hand(object):
         '''
         self.win.border()
         self.win.refresh()
+
+    def reset(self):
+        self.win.clear()
+        self.hand = []
+        self.new_deal = True
+        self.card_window()
 
     def deal_hand(self):
         '''
@@ -76,7 +87,8 @@ class Hand(object):
         self.card = Card(hand=self)
         y = 0
         x = 1
-        self.card.deal_cards()
+        self.card.deal_cards(new_deal=self.new_deal)
+        self.new_deal = False
         for c in range(len(self.hand)):
             self.card.render_card(self.win, y, x,
                                   self.hand[c][0],
