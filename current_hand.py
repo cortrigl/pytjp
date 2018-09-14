@@ -34,7 +34,7 @@ class CurrentHandPanel(object):
 
         for key in self.name_pos_map.keys():
             y = self.name_pos_map[key]
-            x = 0
+            x = 1
             self.win.addstr(y, x, '[', normal_color)
             x += 2
             self.win.addstr(y, x, ']', normal_color)

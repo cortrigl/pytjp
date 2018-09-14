@@ -2,14 +2,18 @@
 
 import curses
 from colormap import ColorMap
+from windows import initWindow
 
 
 class CardSelect(object):
-    def __init__(self, win, hand=None):
+    def __init__(self, mh, mw, hand=None):
         self.selected_cards = []
         self.cmap = ColorMap()
         self.hand = hand.hand
-        self.win = win
+        self.max_h = 1
+        self.max_w = 40
+        init_win = initWindow(mh, mw, self.cmap)
+        self.cs_win = init_win.create('cardselect', 'blue_card', mh, mw)
 
     def menu(self, hand):
         '''
@@ -38,11 +42,11 @@ class CardSelect(object):
         return
 
     def reset(self):
-        self.win.clear()
+        self.cs_win.clear()
         self.selected_cards = []
-        self.win.border()
-        self.draw_card_selector()
-        self.win.refresh()
+        # self.cs_win.border()
+        self.draw_panel()
+        self.cs_win.refresh()
 
     def discard(self):
         for c in reversed(self.selected_cards):
@@ -60,25 +64,25 @@ class CardSelect(object):
 
         self.draw_card_selector()
 
-    def draw_card_selector(self):
+    def draw_panel(self):
         '''
         Draw out the window that will contain the selector elements
         this needs to be separate from the card drawing.
         '''
         y = 0
-        x = 5
+        base_x = ((self.max_w - 1) // 5)
+        offset = base_x - (base_x // 2)
         normal_color = self.cmap.colors['yellow_bg']
         select_color = self.cmap.colors['yellow_bg'] | curses.A_BOLD
         select_color |= normal_color
         card_numbers = [1, 2, 3, 4, 5]
-        self.win.clear()
+        self.cs_win.clear()
         for i in card_numbers:
-            self.win.addstr(y, x, "(", self.cmap.colors['white_bg'])
-            x += 1
+            x = (offset * i) + (offset * (i - 1))  # 4n + 4(n-1)
+            # x = x - 1
+            # self.cs_win.addstr(y, x, "(", self.cmap.colors['white_bg'])
             if i in self.selected_cards:
-                self.win.addstr(y, x, str(i), select_color)
+                self.cs_win.addstr(y, x, str(i), select_color)
             else:
-                self.win.addstr(y, x, str(i), normal_color)
-            x += 1
-            self.win.addstr(y, x, ")", self.cmap.colors['white_bg'])
-            x += 9
+                self.cs_win.addstr(y, x, str(i), normal_color)
+            # self.cs_win.addstr(y, x + 2, ")", self.cmap.colors['white_bg'])

@@ -1,29 +1,23 @@
 # encoding utf-8
 
-import curses
 from colormap import ColorMap
+from windows import initWindow
 
 
 class InfoPanel(object):
-    def __init__(self, win):
+    '''
+    White bg area for menu items and, money, and plays info
+    '''
+    def __init__(self, mh, mw):
         self.cmap = ColorMap()
-        self.win = win
+        init_win = initWindow(mh, mw, self.cmap)
+        self.ip_win = init_win.create('infopanel', 'black_card', mh, mw)
 
-    def main(self):
-        self.win.clear()
-        self.draw_info_panel()
-        self.win.refresh()
+    def draw_panel(self):
+        bgcolor = self.cmap.colors['white_stat']
+        self.ip_win.bkgd(bgcolor)
 
-    def draw_info_panel(self):
-        y = 0
-        x = 1
-        hl_color = curses.A_BOLD
-        hl_color |= self.cmap.colors['yellow_stat']
-
-        self.win.addstr(y, x, '(')
-        x += 1
-        self.win.addstr(y, x, 'Q', hl_color)
-        x += 1
-        self.win.addstr(y, x, ')')
-        x += 2
-        self.win.addstr(y, x, 'exit to BBS')
+    def reset(self):
+        self.ip_win.clear()
+        self.draw_panel()
+        self.ip_win.refresh()

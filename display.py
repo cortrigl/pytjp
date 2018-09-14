@@ -11,36 +11,39 @@ from windows import initWindow
 from current_hand import CurrentHandPanel
 from title_bar import TitleBar
 from dropshadow import DropShadow
+from hand_window import HandWindow
 
 
 class Render(object):
+    '''
+    Initialize curses and display all the game window elements
+    '''
     def __init__(self):
         self.stdscr = curses.initscr()
         curses.noecho()
         curses.cbreak()
         curses.start_color()
         self.max_height, self.max_width = self.stdscr.getmaxyx()
+        self.cmap = ColorMap()
 
     def main(self):
-        self.cmap = ColorMap()
         self.stdscr.bkgd(self.cmap.colors['black_card'])
         self.stdscr.clear()
         self.stdscr.refresh()
-        init_win = initWindow(self.max_height, self.max_width, self.cmap)
         dropshadow = DropShadow(self.max_height, self.max_width)
         dropshadow.reset()
-        hs_win = init_win.create('handdisplay', 'blue_card')
-        cs_win = init_win.create('cardselect', 'blue_card')
-        # ip_win = init_win.create('infopanel', 'blue_stat')
-        ch_win = init_win.create('currenthand', 'blue_card')
-
+        info_bar = InfoPanel(self.max_height, self.max_width)
+        info_bar.reset()
+        card_disp = HandWindow(self.max_height, self.max_width)
+        card_disp.reset()
+        hand = Hand(card_disp)
         title = TitleBar(self.stdscr)
-        card_disp = Hand(hs_win)
-        # card_disp.reset()
-        # info_bar = InfoPanel(ip_win)
-        curr_hand = CurrentHandPanel(ch_win)
-        card_sel = CardSelect(cs_win, hand=card_disp)
         title.reset()
+
+        init_win = initWindow(self.max_height, self.max_width, self.cmap)
+        ch_win = init_win.create('currenthand', 'blue_card')
+        curr_hand = CurrentHandPanel(ch_win)
+        card_sel = CardSelect(self.max_height, self.max_width, hand=hand)
 
         while True:
             # info_bar.main()

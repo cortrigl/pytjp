@@ -9,6 +9,7 @@ class TitleBar(object):
     def __init__(self, win):
         self.cmap = ColorMap()
         self.max_h, self.max_w = win.getmaxyx()
+        self.max_h, self.max_w = 24, 79
         init_win = initWindow(self.max_h, self.max_w, self.cmap)
         self.line1_win = init_win.create(
             'titleline1', 'black_card', h=1, w=17)

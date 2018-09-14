@@ -4,19 +4,24 @@ import curses
 
 class initWindow(object):
     ''' Initialize a new curses window '''
-    def __init__(self, max_h, max_w, cmap):
+    def __init__(self, max_h, max_w, cmap, y=None, x=None):
         self.max_h = max_h
         self.max_w = max_w
         self.cmap = cmap
         self.h = None
         self.w = None
+        self.y = y
+        self.x = x
 
-    def create(self, w_name, color_name, h=None, w=None):
+    def create(self, w_name, color_name, h=None, w=None, pwin=None):
         self.h = h
         self.w = w
         bg_color = self.cmap.colors[color_name]
         (height, width, y, x) = self.setPosition(w_name)
-        win = curses.newwin(height, width, y, x)
+        if w_name == 'card':
+            win = pwin.subwin(height, width, y, x)
+        else:
+            win = curses.newwin(height, width, y, x)
         win.bkgd(bg_color)
         win.refresh()
         return win
@@ -46,7 +51,9 @@ class initWindow(object):
             'titlebar': titleWindow,
             'titleline1': titleLineOne,
             'titleline2': titleLineTwo,
-            'dropshadow': dsWindow
+            'dropshadow': dsWindow,
+            'cardslot': cardSlot,
+            'card': cardElement
         }
         win_class = wins_to_positions[window_name](
             self.max_h, self.max_w, self.h, self.w)
@@ -56,10 +63,12 @@ class initWindow(object):
 class dsWindow(object):
     ''' Drop shadow window '''
     def __init__(self, mh, mw, h, w):
-        height = mh - 4
-        width = mw - 3
+        # height = mh - 4
+        # width = mw - 3
         y = 3
         x = 1
+        height = 22
+        width = 77
         self.window_data = (height, width, y, x)
 
     def getWinSizePos(self):
@@ -70,7 +79,7 @@ class csWindow(object):
     ''' Discard selection window '''
     def __init__(self, mh, mw, h, w):
         height = 1
-        width = 59
+        width = 41
         # y = mh - (height + 14)
         # x = mw // 2 - 30
         y = 4
@@ -85,9 +94,7 @@ class hsWindow(object):
     ''' Card display window '''
     def __init__(self, mh, mw, h, w):
         height = 9
-        width = 59
-        # y = mh - (height + 2)
-        # x = mw // 2 - 30
+        width = 41
         y = 5
         x = 2
         self.window_data = (height, width, y, x)
@@ -100,11 +107,11 @@ class chWindow(object):
     ''' Type of current hand (full house, etc.) '''
     def __init__(self, mh, mw, h, w):
         height = 12
-        width = 20
+        width = 24
         # y = mh - (height + 20)
         # x = 2
         y = 4
-        x = 61
+        x = 43
         # x = mw // 2 - 30
         self.window_data = (height, width, y, x)
 
@@ -115,10 +122,10 @@ class chWindow(object):
 class ipWindow(object):
     ''' Information panel window '''
     def __init__(self, mh, mw, h, w):
-        height = 1
-        width = mw
-        y = mh - height
-        x = 0
+        height = 10
+        width = 75
+        y = 13
+        x = 2
         self.window_data = (height, width, y, x)
 
     def getWinSizePos(self):
@@ -154,6 +161,26 @@ class titleLineTwo(object):
     def __init__(self, mh, mw, h, w):
         y = 1
         x = mw // 2 - (w // 2)
+        self.window_data = (h, w, y, x)
+
+    def getWinSizePos(self):
+        return self.window_data
+
+
+class cardSlot(object):
+    def __init__(self, mh, mw, h, w):
+        y = 0
+        x = 0
+        self.window_data = (h, w, y, x)
+
+    def getWinSizePos(self):
+        return self.window_data
+
+
+def cardElement(object):
+    def __init__(self, mh, mw, h, w):
+        y = self.y
+        x = self.x
         self.window_data = (h, w, y, x)
 
     def getWinSizePos(self):

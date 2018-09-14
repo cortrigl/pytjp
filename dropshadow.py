@@ -16,13 +16,11 @@ class DropShadow(object):
         '''
         self.cmap = ColorMap()
         init_win = initWindow(mh, mw, self.cmap)
-        self.ds_win = init_win.create(
-            'dropshadow', 'black_card', mh, mw)
+        self.ds_win = init_win.create('dropshadow', 'black_card', mh, mw)
 
     def draw_panel(self):
         bgcolor = curses.A_REVERSE | curses.A_BOLD
         bgcolor |= self.cmap.colors['black_stat']
-        self.ds_win.addstr(20, 5, "test", bgcolor)
         self.ds_win.bkgd(bgcolor)
 
     def reset(self):
