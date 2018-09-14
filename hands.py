@@ -85,8 +85,8 @@ class Hand(object):
         from card import Card
 
         self.card = Card(hand=self)
-        y = 0
-        x = 1
+        y = 1
+        x = 2
         self.card.deal_cards(new_deal=self.new_deal)
         self.new_deal = False
         for c in range(len(self.hand)):

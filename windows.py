@@ -70,9 +70,11 @@ class csWindow(object):
     ''' Discard selection window '''
     def __init__(self, mh, mw, h, w):
         height = 1
-        width = 60
-        y = mh - (height + 14)
-        x = mw // 2 - 30
+        width = 59
+        # y = mh - (height + 14)
+        # x = mw // 2 - 30
+        y = 4
+        x = 2
         self.window_data = (height, width, y, x)
 
     def getWinSizePos(self):
@@ -82,10 +84,12 @@ class csWindow(object):
 class hsWindow(object):
     ''' Card display window '''
     def __init__(self, mh, mw, h, w):
-        height = 12
-        width = 60
-        y = mh - (height + 2)
-        x = mw // 2 - 30
+        height = 9
+        width = 59
+        # y = mh - (height + 2)
+        # x = mw // 2 - 30
+        y = 5
+        x = 2
         self.window_data = (height, width, y, x)
 
     def getWinSizePos(self):
@@ -97,8 +101,10 @@ class chWindow(object):
     def __init__(self, mh, mw, h, w):
         height = 12
         width = 20
-        y = mh - (height + 20)
-        x = 2
+        # y = mh - (height + 20)
+        # x = 2
+        y = 4
+        x = 61
         # x = mw // 2 - 30
         self.window_data = (height, width, y, x)
 

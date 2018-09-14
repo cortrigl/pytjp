@@ -40,6 +40,7 @@ class CardSelect(object):
     def reset(self):
         self.win.clear()
         self.selected_cards = []
+        self.win.border()
         self.draw_card_selector()
         self.win.refresh()
 

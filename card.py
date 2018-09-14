@@ -1,6 +1,5 @@
 # encoding: utf-8
 
-import curses
 from colormap import ColorMap
 from deck import Deck
 
@@ -14,8 +13,8 @@ class Card(object):
         self.club = u'\u2663'
         self.spade = u'\u2660'
         self.diamond = u'\u2666'
-        self.bg_color = curses.A_BOLD
-        self.bg_color |= self.cmap.colors['white_card']
+        # self.bg_color = curses.A_BOLD
+        self.bg_color = self.cmap.colors['white_card']
         self.deck = Deck()
         self.deck.new_deck()
         self.deck.card_mapping()
@@ -32,12 +31,10 @@ class Card(object):
             self.symbol = self.club
 
     def get_suit_color(self, suit):
-        self.suit_color = curses.A_BOLD
-        self.suit_color |= curses.A_REVERSE
         if suit == 'diamonds' or suit == 'hearts':
-            self.suit_color |= self.cmap.colors['red_card']
+            self.suit_color = self.cmap.colors['red_stat']
         else:
-            self.suit_color |= self.cmap.colors['black_card']
+            self.suit_color = self.cmap.colors['black_stat']
 
     def render_card(self, win, y, x, val, suit):
         self.get_symbol(suit)
@@ -47,8 +44,8 @@ class Card(object):
         (x_begin_1, x_begin_2, x_end_1, x_end_2) = (1, 8, 2, 9)
         if len(self.value) == 2:
             (x_begin_1, x_begin_2, x_end_1, x_end_2) = (1, 7, 3, 9)
-        win.addstr(y, x, self.blank_space * 10, self.bg_color)
-        y = y + 1
+        # win.addstr(y, x, self.blank_space * 10, self.bg_color)
+        # y = y + 1
         win.addstr(y, x, self.blank_space, self.bg_color)
         win.addstr(y, x + x_begin_1, self.value, self.suit_color)
         win.addstr(y, x + x_end_1, self.blank_space * 6, self.bg_color)
@@ -75,8 +72,8 @@ class Card(object):
         win.addstr(y, x + x_end_1, self.blank_space * 6, self.bg_color)
         win.addstr(y, x + x_begin_2, self.value, self.suit_color)
         win.addstr(y, x + x_end_2, self.blank_space, self.bg_color)
-        y = y + 1
-        win.addstr(y, x, self.blank_space * 10, self.bg_color)
+        # y = y + 1
+        # win.addstr(y, x, self.blank_space * 10, self.bg_color)
 
     def get_value(self, val):
         try:

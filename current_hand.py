@@ -9,16 +9,16 @@ class CurrentHandPanel(object):
         self.cmap = ColorMap()
         self.win = win
         self.name_pos_map = {
-            'Nothing': 1,
-            'One pair': 2,
-            'Two pair': 3,
-            'Three-of-a-kind': 4,
-            'Straight': 5,
-            'Flush': 6,
-            'Full house': 7,
-            'Four-of-a-kind': 8,
-            'Straight flush': 9,
-            'Royal flush': 10
+            'Nothing': 0,
+            'One pair': 1,
+            'Two pair': 2,
+            'Three-of-a-kind': 3,
+            'Straight': 4,
+            'Flush': 5,
+            'Full house': 6,
+            'Four-of-a-kind': 7,
+            'Straight flush': 8,
+            'Royal flush': 9
         }
 
     def main(self, hl_hand=None):

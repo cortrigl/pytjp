@@ -31,19 +31,19 @@ class Render(object):
         dropshadow.reset()
         hs_win = init_win.create('handdisplay', 'blue_card')
         cs_win = init_win.create('cardselect', 'blue_card')
-        ip_win = init_win.create('infopanel', 'blue_stat')
+        # ip_win = init_win.create('infopanel', 'blue_stat')
         ch_win = init_win.create('currenthand', 'blue_card')
 
         title = TitleBar(self.stdscr)
         card_disp = Hand(hs_win)
         # card_disp.reset()
-        info_bar = InfoPanel(ip_win)
+        # info_bar = InfoPanel(ip_win)
         curr_hand = CurrentHandPanel(ch_win)
         card_sel = CardSelect(cs_win, hand=card_disp)
         title.reset()
 
         while True:
-            info_bar.main()
+            # info_bar.main()
             curr_hand.main()
             card_disp.reset()
             card_sel.reset()
@@ -63,7 +63,7 @@ class Render(object):
 
                 self.stdscr.getch()
             else:
-                self.stdscr.addstr("Unrecognized key.")
+                pass
 
     def render_screen(self):
         self.main()
