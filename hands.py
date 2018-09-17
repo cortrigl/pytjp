@@ -83,19 +83,22 @@ class Hand(object):
         Upon drawing the cards, call the evaluator to see what we have.
         '''
         from card import Card
+        from card_element import CardElement
 
         self.card = Card(hand=self)
-        y = 1
-        x = 2
+        y = 6
+        x = 3
         self.card.deal_cards(new_deal=self.new_deal)
         self.new_deal = False
         for c in range(len(self.hand)):
-            self.card.render_card(self.win, y, x,
-                                  self.hand[c][0],
-                                  self.hand[c][1])
-            x += 11
+            self.card.get_symbol(self.hand[c][1])
+            self.card.get_value(self.hand[c][0])
+            self.card.get_suit_color(self.hand[c][1])
 
-        self.win.refresh()
+            curr_card = CardElement(
+                y, x, self.card.symbol, self.card.value, self.card.suit_color)
+            curr_card.reset()
+            x += 10
 
         evalh = EvaluateHand(self.hand)
         result_hand = evalh.read_hand()

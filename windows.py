@@ -18,10 +18,10 @@ class initWindow(object):
         self.w = w
         bg_color = self.cmap.colors[color_name]
         (height, width, y, x) = self.setPosition(w_name)
-        if w_name == 'card':
-            win = pwin.subwin(height, width, y, x)
-        else:
-            win = curses.newwin(height, width, y, x)
+        # if w_name == 'card':
+        #    win = pwin.subwin(height, width, y, x)
+        # else:
+        win = curses.newwin(height, width, y, x)
         win.bkgd(bg_color)
         win.refresh()
         return win
@@ -56,13 +56,16 @@ class initWindow(object):
             'card': cardElement
         }
         win_class = wins_to_positions[window_name](
-            self.max_h, self.max_w, self.h, self.w)
+            self.max_h, self.max_w, self.h, self.w, y=self.y, x=self.x)
+        print("call to win class: {}; {}, {}, {}, {}, {}, {}".format(
+            window_name, self.max_h, self.max_w,  self.h, self.w,
+            self.y, self.x), file=open('/tmp/tjp.log', 'a'))
         return win_class.getWinSizePos()
 
 
 class dsWindow(object):
     ''' Drop shadow window '''
-    def __init__(self, mh, mw, h, w):
+    def __init__(self, mh, mw, h, wi, y=None, x=None):
         # height = mh - 4
         # width = mw - 3
         y = 3
@@ -77,9 +80,9 @@ class dsWindow(object):
 
 class csWindow(object):
     ''' Discard selection window '''
-    def __init__(self, mh, mw, h, w):
+    def __init__(self, mh, mw, h, w, y=None, x=None):
         height = 1
-        width = 41
+        width = 51
         # y = mh - (height + 14)
         # x = mw // 2 - 30
         y = 4
@@ -92,9 +95,9 @@ class csWindow(object):
 
 class hsWindow(object):
     ''' Card display window '''
-    def __init__(self, mh, mw, h, w):
+    def __init__(self, mh, mw, h, w, y=None, x=None):
         height = 9
-        width = 41
+        width = 51
         y = 5
         x = 2
         self.window_data = (height, width, y, x)
@@ -105,13 +108,13 @@ class hsWindow(object):
 
 class chWindow(object):
     ''' Type of current hand (full house, etc.) '''
-    def __init__(self, mh, mw, h, w):
+    def __init__(self, mh, mw, h, w, y=None, x=None):
         height = 12
         width = 24
         # y = mh - (height + 20)
         # x = 2
         y = 4
-        x = 43
+        x = 53
         # x = mw // 2 - 30
         self.window_data = (height, width, y, x)
 
@@ -121,7 +124,7 @@ class chWindow(object):
 
 class ipWindow(object):
     ''' Information panel window '''
-    def __init__(self, mh, mw, h, w):
+    def __init__(self, mh, mw, h, w, y=None, x=None):
         height = 10
         width = 75
         y = 13
@@ -134,7 +137,7 @@ class ipWindow(object):
 
 class titleWindow(object):
     '''  Title element '''
-    def __init__(self, mh, mw, h, w):
+    def __init__(self, mh, mw, h, w, y=None, x=None):
         height = 2
         width = 46
         y = 0
@@ -147,7 +150,7 @@ class titleWindow(object):
 
 class titleLineOne(object):
     ''' First line of title '''
-    def __init__(self, mh, mw, h, w):
+    def __init__(self, mh, mw, h, w, y=None, x=None):
         y = 0
         x = mw // 2 - (w // 2)
         self.window_data = (h, w, y, x)
@@ -158,7 +161,7 @@ class titleLineOne(object):
 
 class titleLineTwo(object):
     ''' Second line of title '''
-    def __init__(self, mh, mw, h, w):
+    def __init__(self, mh, mw, h, w, y=None, x=None):
         y = 1
         x = mw // 2 - (w // 2)
         self.window_data = (h, w, y, x)
@@ -168,7 +171,7 @@ class titleLineTwo(object):
 
 
 class cardSlot(object):
-    def __init__(self, mh, mw, h, w):
+    def __init__(self, mh, mw, h, w, y=None, x=None):
         y = 0
         x = 0
         self.window_data = (h, w, y, x)
@@ -177,10 +180,10 @@ class cardSlot(object):
         return self.window_data
 
 
-def cardElement(object):
-    def __init__(self, mh, mw, h, w):
-        y = self.y
-        x = self.x
+class cardElement(object):
+    def __init__(self, mh, mw, h, w, y=None, x=None):
+        h = mh
+        w = mw
         self.window_data = (h, w, y, x)
 
     def getWinSizePos(self):

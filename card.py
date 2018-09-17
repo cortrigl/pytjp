@@ -19,6 +19,7 @@ class Card(object):
         self.deck.new_deck()
         self.deck.card_mapping()
         self.hand = hand.hand
+        self.suit_color = None
 
     def get_symbol(self, suit):
         if suit == 'hearts':
@@ -35,45 +36,6 @@ class Card(object):
             self.suit_color = self.cmap.colors['red_stat']
         else:
             self.suit_color = self.cmap.colors['black_stat']
-
-    def render_card(self, win, y, x, val, suit):
-        self.get_symbol(suit)
-        self.get_suit_color(suit)
-        self.get_value(val)
-
-        (x_begin_1, x_begin_2, x_end_1, x_end_2) = (1, 8, 2, 9)
-        if len(self.value) == 2:
-            (x_begin_1, x_begin_2, x_end_1, x_end_2) = (1, 7, 3, 9)
-        # win.addstr(y, x, self.blank_space * 10, self.bg_color)
-        # y = y + 1
-        win.addstr(y, x, self.blank_space, self.bg_color)
-        win.addstr(y, x + x_begin_1, self.value, self.suit_color)
-        win.addstr(y, x + x_end_1, self.blank_space * 6, self.bg_color)
-        win.addstr(y, x + x_begin_2, self.value, self.suit_color)
-        win.addstr(y, x + x_end_2, self.blank_space, self.bg_color)
-        y = y + 1
-        win.addstr(y, x, self.blank_space, self.bg_color)
-        win.addstr(y, x + 1, self.symbol, self.suit_color)
-        win.addstr(y, x + 2, self.blank_space * 6, self.bg_color)
-        win.addstr(y, x + 8, self.symbol, self.suit_color)
-        win.addstr(y, x + 9, self.blank_space, self.bg_color)
-        for i in range(1, 4):
-            y = y + 1
-            win.addstr(y, x, self.blank_space * 10, self.bg_color)
-        y = y + 1
-        win.addstr(y, x, self.blank_space, self.bg_color)
-        win.addstr(y, x + 1, self.symbol, self.suit_color)
-        win.addstr(y, x + 2, self.blank_space * 6, self.bg_color)
-        win.addstr(y, x + 8, self.symbol, self.suit_color)
-        win.addstr(y, x + 9, self.blank_space, self.bg_color)
-        y = y + 1
-        win.addstr(y, x, self.blank_space, self.bg_color)
-        win.addstr(y, x + x_begin_1, self.value, self.suit_color)
-        win.addstr(y, x + x_end_1, self.blank_space * 6, self.bg_color)
-        win.addstr(y, x + x_begin_2, self.value, self.suit_color)
-        win.addstr(y, x + x_end_2, self.blank_space, self.bg_color)
-        # y = y + 1
-        # win.addstr(y, x, self.blank_space * 10, self.bg_color)
 
     def get_value(self, val):
         try:

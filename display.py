@@ -7,7 +7,6 @@ from colormap import ColorMap
 from hands import Hand
 from card_selection import CardSelect
 from info_panel import InfoPanel
-from windows import initWindow
 from current_hand import CurrentHandPanel
 from title_bar import TitleBar
 from dropshadow import DropShadow
@@ -40,13 +39,10 @@ class Render(object):
         title = TitleBar(self.stdscr)
         title.reset()
 
-        init_win = initWindow(self.max_height, self.max_width, self.cmap)
-        ch_win = init_win.create('currenthand', 'blue_card')
-        curr_hand = CurrentHandPanel(ch_win)
+        curr_hand = CurrentHandPanel(self.max_height, self.max_width)
         card_sel = CardSelect(self.max_height, self.max_width, hand=hand)
 
         while True:
-            # info_bar.main()
             curr_hand.main()
             card_disp.reset()
             card_sel.reset()
@@ -55,14 +51,14 @@ class Render(object):
             if c == ord('q'):
                 self.shutdown()
             elif c == ord('d'):
-                # card_sel.reset()
-                card_sel.draw_card_selector()
-                ret = card_disp.deal_hand()
+                card_sel.draw_panel()
+                ret = hand.deal_hand()
                 curr_hand.main(ret[0])
                 card_sel.menu(card_disp)
 
-                ret = card_disp.deal_hand()
+                ret = hand.deal_hand()
                 curr_hand.main(ret[0])
+                hand.hand = []
 
                 self.stdscr.getch()
             else:

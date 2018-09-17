@@ -14,16 +14,17 @@ class CardSelect(object):
         self.max_w = 40
         init_win = initWindow(mh, mw, self.cmap)
         self.cs_win = init_win.create('cardselect', 'blue_card', mh, mw)
+        self.hand = hand.hand
 
     def menu(self, hand):
         '''
         main() is called after cards are dealt
         provides a loop to capture discard choices
         '''
-        self.hand = hand.hand
+        # self.hand = hand.hand
 
         while True:
-            c = self.win.getch()
+            c = self.cs_win.getch()
             if c == ord('1'):
                 self.select_card(1)
             elif c == ord('2'):
@@ -62,7 +63,7 @@ class CardSelect(object):
         else:
             self.selected_cards.append(card_number)
 
-        self.draw_card_selector()
+        self.draw_panel()
 
     def draw_panel(self):
         '''
@@ -79,10 +80,7 @@ class CardSelect(object):
         self.cs_win.clear()
         for i in card_numbers:
             x = (offset * i) + (offset * (i - 1))  # 4n + 4(n-1)
-            # x = x - 1
-            # self.cs_win.addstr(y, x, "(", self.cmap.colors['white_bg'])
             if i in self.selected_cards:
                 self.cs_win.addstr(y, x, str(i), select_color)
             else:
                 self.cs_win.addstr(y, x, str(i), normal_color)
-            # self.cs_win.addstr(y, x + 2, ")", self.cmap.colors['white_bg'])

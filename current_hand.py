@@ -2,12 +2,12 @@
 
 import curses
 from colormap import ColorMap
+from windows import initWindow
 
 
 class CurrentHandPanel(object):
-    def __init__(self, win):
+    def __init__(self, mh, mw):
         self.cmap = ColorMap()
-        self.win = win
         self.name_pos_map = {
             'Nothing': 0,
             'One pair': 1,
@@ -20,11 +20,13 @@ class CurrentHandPanel(object):
             'Straight flush': 8,
             'Royal flush': 9
         }
+        init_win = initWindow(mh, mw, self.cmap)
+        self.ch_win = init_win.create('currenthand', 'blue_card')
 
     def main(self, hl_hand=None):
-        self.win.clear()
+        self.ch_win.clear()
         self.draw_panel(hl_hand)
-        self.win.refresh()
+        self.ch_win.refresh()
 
     def draw_panel(self, hand_to_highlight):
         x = 0
@@ -34,13 +36,13 @@ class CurrentHandPanel(object):
 
         for key in self.name_pos_map.keys():
             y = self.name_pos_map[key]
-            x = 1
-            self.win.addstr(y, x, '[', normal_color)
+            x = 2
+            self.ch_win.addstr(y, x, '[', normal_color)
             x += 2
-            self.win.addstr(y, x, ']', normal_color)
+            self.ch_win.addstr(y, x, ']', normal_color)
             x += 2
             if key == hand_to_highlight:
-                self.win.addstr(y, x, key, hl_color)
-                self.win.addstr(y, 1, u'\u2714', hl_color)
+                self.ch_win.addstr(y, x, key, hl_color)
+                self.ch_win.addstr(y, 3, u'\u2714', hl_color)
             else:
-                self.win.addstr(y, x, key, normal_color)
+                self.ch_win.addstr(y, x, key, normal_color)
