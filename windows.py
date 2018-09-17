@@ -125,7 +125,7 @@ class chWindow(object):
 class ipWindow(object):
     ''' Information panel window '''
     def __init__(self, mh, mw, h, w, y=None, x=None):
-        height = 10
+        height = 11
         width = 75
         y = 13
         x = 2

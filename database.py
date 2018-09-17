@@ -1,19 +1,29 @@
 # encoding: utf-8
 
+import os.path
 import sqlite3
 
 
 class DataBase(object):
     def __init__(self):
         self._db = None
+        db_name = 'tjp.db'
+        self.connectDB(db_name)
 
-    def createDB(self):
-        self._db = sqlite3.connect('tjp.db')
+    def connectDB(self, db_name):
+        if not os.path.isfile(db_name):
+            self.createDB(db_name)
+        else:
+            self._db = sqlite3.connect('tjp.db')
+            self._db.row_factory = sqlite3.Row
+
+    def createDB(self, db_name):
+        self._db = sqlite3.connect(db_name)
         self._db.row_factory = sqlite3.Row
 
         self._db.cursor().execute('''
                                   CREATE TABLE user(
-                                  id INTEGER PRIMARY KEY,
+                                  id_num INTEGER PRIMARY KEY,
                                   name TEXT,
                                   bbs TEXT,
                                   sysop TEXT,
@@ -29,7 +39,7 @@ class DataBase(object):
 
         self._db.cursor().execute('''
                                   CREATE TABLE system(
-                                  id INTEGER PRIMARY KEY,
+                                  id_num INTEGER PRIMARY KEY,
                                   num_royal_flush INT,
                                   num_straight_flush INT,
                                   num_four_of_a_kind INT,
@@ -46,24 +56,45 @@ class DataBase(object):
         self._db.commit()
 
 
-class UserData(object):
+class UserData(DataBase):
+    '''
+    Handler for database operations on user accounts
+    '''
     def __init__(self):
-        pass
+        self.userdata = None
+        super(UserData, self).__init__()
 
     def add(self, user):
+        '''
+        Add a new user into the database
+        :param user:
+        '''
+        data = {
+            'id_num': 0,
+            'name': user,
+            'bbs': 'LanWarriors',
+            'sysop': 'Anubis',
+            'last_bet': 100,
+            'current_money': 5000,
+            'highest_money': 25000,
+            'best_hand': "10D,11D,12D,13D,1D",
+            'lw_money': 0,
+            'lw_best_hand': ''
+        }
+
         self._db.cursor().execute('''
-                                  INSERT INTO user(id, name, bbs, sysop,
+                                  INSERT INTO user(id_num, name, bbs, sysop,
                                   last_bet, current_money, highest_money,
                                   best_hand, lw_money, lw_best_hand) VALUES(
-                                  :id, :name, :bbs, :sysop, :last_bet,
+                                  :id_num, :name, :bbs, :sysop, :last_bet,
                                   :current_money, :highest_money, :best_hand,
-                                  :lw_money, :lw_best_hand)''', user)
+                                  :lw_money, :lw_best_hand)''', data)
 
     def get(self, user):
-        self._db.cursor().execute("SELECT * FROM user WHERE id=:id",
-                                  {'id': user}).fetchone()
+        self.userdata = self._db.cursor().execute(
+            "SELECT * FROM user WHERE name=:name", {'name': user}).fetchone()
 
 
-class SystemData(object):
+class SystemData(DataBase):
     def __init__(self):
         pass

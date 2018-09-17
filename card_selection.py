@@ -9,20 +9,20 @@ class CardSelect(object):
     def __init__(self, mh, mw, hand=None):
         self.selected_cards = []
         self.cmap = ColorMap()
-        self.hand = hand.hand
         self.max_h = 1
         self.max_w = 40
         init_win = initWindow(mh, mw, self.cmap)
         self.cs_win = init_win.create('cardselect', 'blue_card', mh, mw)
-        self.hand = hand.hand
+        self.hand = hand
 
-    def menu(self, hand):
+    def set_hand(self, hand):
+        self.hand = hand
+
+    def menu(self):
         '''
         main() is called after cards are dealt
         provides a loop to capture discard choices
         '''
-        # self.hand = hand.hand
-
         while True:
             c = self.cs_win.getch()
             if c == ord('1'):

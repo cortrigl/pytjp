@@ -26,41 +26,75 @@ class Render(object):
         self.cmap = ColorMap()
 
     def main(self):
+        '''
+        Render.main()
+
+        Start up the  curses main window and all subordinates. Then control
+        the main menu loop.
+
+        Basic notion is to instantiate the windows, then call their reset()
+        method to display them.
+        '''
+        # The main curses screen
         self.stdscr.bkgd(self.cmap.colors['black_card'])
         self.stdscr.clear()
         self.stdscr.refresh()
+        # Start and initialize the various windows
         dropshadow = DropShadow(self.max_height, self.max_width)
         dropshadow.reset()
         info_bar = InfoPanel(self.max_height, self.max_width)
         info_bar.reset()
         card_disp = HandWindow(self.max_height, self.max_width)
         card_disp.reset()
-        hand = Hand(card_disp)
         title = TitleBar(self.stdscr)
         title.reset()
-
         curr_hand = CurrentHandPanel(self.max_height, self.max_width)
-        card_sel = CardSelect(self.max_height, self.max_width, hand=hand)
+        card_sel = CardSelect(self.max_height, self.max_width)
 
+        # Start up a new Hand() object to obtain an empty hand array
+        hand = Hand()
+
+        '''
+        The main menu loop. Refresh the dynamic elements - card selector,
+        card display, and hand information windows.
+
+        Then loop and wait for the various options
+        '''
         while True:
+            # Reset in a particular order to handle overlap
+            info_bar.reset()
             curr_hand.main()
             card_disp.reset()
             card_sel.reset()
 
             c = self.stdscr.getch()
             if c == ord('q'):
+                # quit was pressed, teardown and exit
                 self.shutdown()
-            elif c == ord('d'):
+            elif c == ord('d') or c == ord('s'):
+                '''
+                Same bet or deal was pressed, deal a new round of cards,
+                update the dynamic elements, and start the card selector
+                loop. When the card selector returns, redeal for the
+                discards then start again.
+                '''
                 card_sel.draw_panel()
-                ret = hand.deal_hand()
+                ret = hand.deal_hand(new_deal=True)
+                card_sel.set_hand(hand.hand)
                 curr_hand.main(ret[0])
-                card_sel.menu(card_disp)
+                card_sel.menu()
 
-                ret = hand.deal_hand()
+                ret = hand.deal_hand(new_deal=False)
                 curr_hand.main(ret[0])
+                info_bar.display_payoff(ret[1])
                 hand.hand = []
 
                 self.stdscr.getch()
+            elif c == ord('e'):
+                '''
+                Enter new bet was pressed. Bring in the new bet dialog.
+                '''
+                pass
             else:
                 pass
 

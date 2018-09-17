@@ -6,7 +6,7 @@ from deck import Deck
 
 class Card(object):
     """ An individual card """
-    def __init__(self, suit=None, value=None, hand=None):
+    def __init__(self, suit=None, value=None):
         self.cmap = ColorMap()
         self.blank_space = u'\u2588'
         self.heart = u'\u2665'
@@ -16,10 +16,12 @@ class Card(object):
         # self.bg_color = curses.A_BOLD
         self.bg_color = self.cmap.colors['white_card']
         self.deck = Deck()
-        self.deck.new_deck()
         self.deck.card_mapping()
-        self.hand = hand.hand
+        self.hand = None
         self.suit_color = None
+
+    def set_hand(self, hand):
+        self.hand = hand
 
     def get_symbol(self, suit):
         if suit == 'hearts':

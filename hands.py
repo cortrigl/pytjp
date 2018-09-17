@@ -10,12 +10,12 @@ class EvaluateHand(object):
         self.PAYOUT_HAND = 10
         self.hand = hand
         self.low_hands = {
-            17: ('Four-of-a-kind', "FOUR-OF-A-KIND!"),
-            13: ('Full house', "A FULL HOUSE!"),
-            11: ('Three-of-a-kind', "THREE-OF-A-KIND!"),
-            9: ('Two pair', "TWO PAIR!"),
+            17: ('Four-of-a-kind', "FOUR-OF-A-KIND"),
+            13: ('Full house', "FULL HOUSE"),
+            11: ('Three-of-a-kind', "THREE-OF-A-KIND"),
+            9: ('Two pair', "TWO PAIR"),
             7: 'One pair',
-            5: ('Nothing', "NOTHING.")
+            5: ('Nothing', "NOTHING")
         }
 
     def read_hand(self):
@@ -31,21 +31,21 @@ class EvaluateHand(object):
                 ''' A straight flush '''
                 if max(values) == 14:
                     ''' A royal flush '''
-                    return ("Royal flush", "A ROYAL FLUSH!")
-                return ("Straight flush", "A STRAIGHT FLUSH!")
-            return ("Straight", "A STRAIGHT!")
+                    return ("Royal flush", "ROYAL FLUSH")
+                return ("Straight flush", "STRAIGHT FLUSH")
+            return ("Straight", "STRAIGHT")
 
         if self.is_same(suits):
             ''' Non-straight Flush '''
-            return ("Flush", "A FLUSH!")
+            return ("Flush", "FLUSH")
         total = sum([values.count(x) for x in values])
         if total == 7:
             for x in values:
                 if values.count(x) > 1:
                     if x >= self.PAYOUT_HAND or x == 1:
-                        return ("One pair", "A HIGH PAIR!")
+                        return ("One pair", "HIGH PAIR")
                     else:
-                        return ("Nothing", "A LOW PAIR.")
+                        return ("Nothing", "LOW PAIR")
 
         return self.low_hands[total]
 
@@ -58,38 +58,23 @@ class EvaluateHand(object):
 
 
 class Hand(object):
-    def __init__(self, win):
-        self.win = win
+    def __init__(self):
+        from card import Card
         self.hand = []
-        self.new_deal = True
+        self.card = Card()
 
-    def card_window(self):
-        '''
-        Construct the container that will hold the drawn cards.
-        '''
-        self.win.border()
-        self.win.refresh()
-
-    def reset(self):
-        self.win.clear()
-        self.hand = []
-        self.new_deal = True
-        self.card_window()
-
-    def deal_hand(self):
+    def deal_hand(self, new_deal=False):
         '''
         Draw cards and display them in the supplied curses container.
 
         Upon drawing the cards, call the evaluator to see what we have.
         '''
-        from card import Card
         from card_element import CardElement
 
-        self.card = Card(hand=self)
         y = 6
         x = 3
-        self.card.deal_cards(new_deal=self.new_deal)
-        self.new_deal = False
+        self.card.set_hand(self.hand)
+        self.card.deal_cards(new_deal=new_deal)
         for c in range(len(self.hand)):
             self.card.get_symbol(self.hand[c][1])
             self.card.get_value(self.hand[c][0])
