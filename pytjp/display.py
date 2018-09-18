@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
-# encoding: utf-8
+# -*- coding: utf-8 -*-
 
+# imports
 import sys
 import curses
+
+# local imports
+import dropfile
+import config.py
 from colormap import ColorMap
 from hands import Hand
 from card_selection import CardSelect
@@ -11,6 +16,7 @@ from current_hand import CurrentHandPanel
 from title_bar import TitleBar
 from dropshadow import DropShadow
 from hand_window import HandWindow
+from database import UserData, SystemData
 
 
 class Render(object):
@@ -18,6 +24,10 @@ class Render(object):
     Initialize curses and display all the game window elements
     '''
     def __init__(self):
+        self.ud = UserData
+        self.sd = SystemData()
+        self.username = dropfile.process_dropfile("door.sys", "DOORSYS")
+        config.init_pytjp_ini("settings.ini")
         self.stdscr = curses.initscr()
         curses.noecho()
         curses.cbreak()
@@ -39,6 +49,14 @@ class Render(object):
         self.stdscr.bkgd(self.cmap.colors['black_card'])
         self.stdscr.clear()
         self.stdscr.refresh()
+        max_plays = self.sd.get_plays()
+        max_games = self.sd.get_games()
+        num_games = self.ud.get_games(self.username)
+
+        if num_games == 0:
+            # Out of plays for the day
+            self.shutdown()
+
         # Start and initialize the various windows
         dropshadow = DropShadow(self.max_height, self.max_width)
         dropshadow.reset()
@@ -78,6 +96,7 @@ class Render(object):
                 loop. When the card selector returns, redeal for the
                 discards then start again.
                 '''
+                num_plays = self.ud.get_plays(self.username)
                 card_sel.draw_panel()
                 ret = hand.deal_hand(new_deal=True)
                 card_sel.set_hand(hand.hand)
