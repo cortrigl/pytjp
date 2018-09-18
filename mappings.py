@@ -22,3 +22,21 @@ class Mappings(object):
           }
 
         return payoff_amounts[hand_type]
+
+    @staticmethod
+    def indefinite_articles(hand_type):
+        articles = {
+            'royal flush': 'a ',
+            'straight flush': 'a ',
+            'four-of-a-kind': ' ',
+            'full house': 'a ',
+            'flush': 'a ',
+            'straight': 'a ',
+            'three-of-a-kind': ' ',
+            'two pair': ' ',
+            'high pair': 'a ',
+            'low pair': 'a ',
+            'nothing': ' '
+        }
+
+        return articles[hand_type]

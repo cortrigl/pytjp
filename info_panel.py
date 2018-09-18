@@ -17,9 +17,8 @@ class InfoPanel(object):
         self.ip_win = init_win.create('infopanel', 'black_card', mh, mw)
         self.mapping = Mappings()
         self.user_data = UserData()
-        # self.user_data.add('testerl')
+        self.user_data.add('testerl')
         self.user_data.get('testerl')
-
 
     def draw_panel(self):
         plays_str = "Plays Left: "
@@ -29,12 +28,16 @@ class InfoPanel(object):
         str_color = self.cmap.colors['blue_stat']
         bgcolor = self.cmap.colors['white_stat']
 
+        x = 2
         self.ip_win.bkgd(bgcolor)
-        self.ip_win.addstr(3, 2, plays_str, str_color)
-        self.ip_win.addstr(3, len(plays_str) + 6, cash_str, str_color)
-        self.ip_win.addstr(9, 2, last_str, str_color)
+        self.ip_win.addstr(3, x, plays_str, str_color)
+        x += len(plays_str)
+        self.ip_win.addstr(3, x + 6, cash_str, str_color)
+        x = 2
+        self.ip_win.addstr(9, x, last_str, str_color)
+        x += len(last_str)
         self.ip_win.addstr(
-            9, 11, self.user_data.userdata['last_bet'], str_color)
+            9, x, str(self.user_data.userdata['last_bet']), str_color)
         self.ip_win.addstr(9, 27, curr_str, str_color)
 
     def display_payoff(self, hand_type):
@@ -47,9 +50,7 @@ class InfoPanel(object):
         text_color |= self.cmap.colors['white_stat']
         hl_color = self.cmap.colors['red_stat']
         begin_str = "You drew "
-        if 'TWO' not in hand_type or 'ONE' not in hand_type \
-                or 'THREE' not in hand_type or 'FOUR' not in hand_type:
-            begin_str += "a "
+        begin_str += self.mapping.indefinite_articles(hand_type.lower())
         middle_str = "and it paid off "
         end_str = '!'
         self.ip_win.addstr(y, x, begin_str, text_color)
