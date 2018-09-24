@@ -150,7 +150,6 @@ class UserData(DataBase):
         self._db.commit()
 
     def get(self, query):
-        print("query: {}".format(query), file=open("/tmp/tjp.log", 'a'))
         self.userdata = self._db.cursor().execute(query).fetchone()
 
     def get_plays(self, user):
@@ -160,12 +159,38 @@ class UserData(DataBase):
         """
         self.get("SELECT plays FROM user WHERE name='{}'".format(user))
 
+    def set_plays(self, user, plays):
+        """
+        Update the number of plays the user has left this round.
+        :param user str: Username to modify.
+        :param plays int: Number of plays to set.
+        """
+        query = "UPDATE user SET plays={} WHERE name='{}'".format(
+            plays, user)
+        self.set(query)
+
     def get_games(self, user):
         """
         Retrieve number of games left
         :param user str: Username to search for in DB
         """
         self.get("SELECT games FROM user WHERE name='{}'".format(user))
+
+    def get_money(self, user):
+        """
+        Retrieve user's current cash value
+        :param user str: User to search for
+        """
+        self.get("SELECT current_money FROM user WHERE name='{}'".format(user))
+
+    def set_money(self, user, money):
+        """
+        Update user's winnings upon completion of a hand
+        :param user str: User to update
+        :param money int: Money value to set
+        """
+        self.set("UPDATE user SET current_money={} WHERE name='{}'".format(
+            money, user))
 
 
 class SystemData(DataBase):

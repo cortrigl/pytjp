@@ -26,6 +26,8 @@ class Render(object):
         self.ud = UserData()
         self.sd = SystemData()
         self.username = dropfile.process_dropfile("door.sys", "DOORSYS")
+        self.ud.add(self.username)
+
         self.stdscr = curses.initscr()
         curses.noecho()
         curses.cbreak()
@@ -94,7 +96,18 @@ class Render(object):
                 loop. When the card selector returns, redeal for the
                 discards then start again.
                 '''
-                num_plays = self.ud.get_plays(self.username)
+                self.ud.get_money(self.username)
+                if self.ud.userdata['current_money'] == 0:
+                    # out of money, try again next week
+                    pass
+
+                self.ud.get_plays(self.username)
+                if self.ud.userdata['plays'] == 0:
+                    # out of plays for this round
+                    pass
+                self.ud.set_plays(self.username,
+                                  self.ud.userdata['plays'] - 1)
+                # info_bar.reset()
                 card_sel.draw_panel()
                 ret = hand.deal_hand(new_deal=True)
                 card_sel.set_hand(hand.hand)

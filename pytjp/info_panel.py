@@ -17,10 +17,10 @@ class InfoPanel(object):
         self.ip_win = init_win.create('infopanel', 'black_card', mh, mw)
         self.mapping = Mappings()
         self.user_data = UserData()
-        self.user_data.add('testerl')
-        self.user_data.get_all('testerl')
+        # self.user_data.get_all('testerl')
 
     def draw_panel(self):
+        self.user_data.get_all('testerl')
         plays_str = "Plays Left: {}".format(self.user_data.userdata['plays'])
         last_str = "Last Bet: {}".format(self.user_data.userdata['last_bet'])
         curr_str = "Current Bet: "
