@@ -18,13 +18,14 @@ class InfoPanel(object):
         self.mapping = Mappings()
         self.user_data = UserData()
         self.user_data.add('testerl')
-        self.user_data.get('testerl')
+        self.user_data.get_all('testerl')
 
     def draw_panel(self):
-        plays_str = "Plays Left: "
-        last_str = "Last Bet: "
+        plays_str = "Plays Left: {}".format(self.user_data.userdata['plays'])
+        last_str = "Last Bet: {}".format(self.user_data.userdata['last_bet'])
         curr_str = "Current Bet: "
-        cash_str = "Cash Left: "
+        cash_str = "Cash Left: {}".format(
+            self.user_data.userdata['current_money'])
         str_color = self.cmap.colors['blue_stat']
         bgcolor = self.cmap.colors['white_stat']
 

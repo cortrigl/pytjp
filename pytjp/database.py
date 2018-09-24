@@ -63,6 +63,7 @@ class DataBase(object):
                                   plays INT,
                                   games INT,
                                   start_money INT
+                                  )
                                   ''')
         self._db.commit()
 
@@ -111,13 +112,19 @@ class UserData(DataBase):
 
         # Pull the default system parameters (cash, num plays, etc.)
         sysdata = SystemData()
-        data = sysdata.get()
+        sysdata.get_all()
+
+        if self.userdata is not None:
+            return
 
         self._db.cursor().execute("""INSERT INTO user(name, games, plays,
                                   last_bet, current_money, highest_money,
                                   best_hand, lw_money, lw_best_hand) VALUES(
-                                  '{}', {}, {}, 0, 0, 0, '', 0, '')""".format(
-                                      user, data['games'], data['games']))
+                                  '{}', {}, {}, 0, {}, 0, '', 0, '')""".format(
+                                      user, sysdata.sysdata['games'],
+                                      sysdata.sysdata['plays'],
+                                      sysdata.sysdata['start_money']
+                                  ))
         self._db.commit()
 
     def get_all(self, user):
@@ -143,6 +150,7 @@ class UserData(DataBase):
         self._db.commit()
 
     def get(self, query):
+        print("query: {}".format(query), file=open("/tmp/tjp.log", 'a'))
         self.userdata = self._db.cursor().execute(query).fetchone()
 
     def get_plays(self, user):
@@ -150,14 +158,14 @@ class UserData(DataBase):
         Retrieve number of plays left
         :param user str: Username to search for in DB
         """
-        self.get("SELECT plays FROM user WHERE user='{}'".format(user))
+        self.get("SELECT plays FROM user WHERE name='{}'".format(user))
 
     def get_games(self, user):
         """
         Retrieve number of games left
         :param user str: Username to search for in DB
         """
-        self.get("SELECT games FROM user WHERE user='{}'".format(user))
+        self.get("SELECT games FROM user WHERE name='{}'".format(user))
 
 
 class SystemData(DataBase):
@@ -168,7 +176,7 @@ class SystemData(DataBase):
         self.sysdata = None
         super(SystemData, self).__init__()
 
-    def add(self, (sys_dict, game_dict)):
+    def add(self, sys_game_info):
         """
         Add system data to the database
 
@@ -176,31 +184,35 @@ class SystemData(DataBase):
         :param dict game_dict: Various game settings
         """
 
-        data = sys_dict
-        data.update(game_dict)
+        (data, game) = sys_game_info
+        data.update(game)
 
         # First check if the system table has an entry
-        sth = self.get()
-        if len(sth.keys) == 0:
+        sth = self.get_all()
+        if sth is None:
             # Insert query
-            self._db.cursor().execute(
-                '''INSERT INTO system(id_num, bbs, sysop, low_hand, plays,
-                games, start_money) VALUES(0, :bbs, :sysop, :low_hand,
-                :plays, :games, :start_money)''', data)
+            cols = ', '.join(data.keys())
+            temp = ', '.join('?' * len(data))
+            query = 'INSERT INTO system(id_num, {}) VALUES(0, {})'.format(
+                cols, temp)
+            self._db.cursor().execute(query, tuple(data.values()))
         else:
             # Update query
-            self._db.cursor().execute(
-                '''UPDATE system SET bbs=':bbs',sysop=':sysop',
-                low_hand=':low_hand', plays=:plays, games=:games,
-                start_money=:start_money WHERE id_num = 0''', data)
+            fields = ', '.join('{} = ?' * len(data))
+            query = "UPDATE system SET {} WHERE id_num=0".format(fields)
+            # query = '''UPDATE system SET bbs='{}',sysop=':sysop',
+            # low_hand=':low_hand', plays=:plays, games=:games,
+            # start_money=:start_money WHERE id_num = 0''', data)
+            self._db.cursor().execute(query, tuple(data.values()))
+
         self._db.commit()
 
     def get_all(self):
-        self.sysdata = self._db.cursor.execute(
+        self.sysdata = self._db.cursor().execute(
             "SELECT * FROM system where id_num = 0").fetchone()
 
     def get(self, query):
-        self.sysdata = self._db.cursor.execute(query).fetchone()
+        self.sysdata = self._db.cursor().execute(query).fetchone()
 
     def set(self, query):
         """
@@ -214,13 +226,13 @@ class SystemData(DataBase):
         """
         Retrieve max number of plays
         """
-        self.get("SELECT plays FROM system")
+        self.get("SELECT plays FROM system WHERE id_num=0")
 
     def get_games(self):
         """
         Retrieve max number of games
         """
-        self.get("SELECT games FROM system")
+        self.get("SELECT games FROM system WHERE id_num=0")
 
 
 class StatsData(DataBase):

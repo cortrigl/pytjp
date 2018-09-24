@@ -11,5 +11,5 @@ from database import SystemData
 def init_pytjp_ini(ini_file="settings.ini"):
     config = configparser.ConfigParser()
     config.read(ini_file)
-    
+
     return (config['SYSTEM'], config['GAME'])

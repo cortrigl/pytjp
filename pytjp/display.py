@@ -7,7 +7,6 @@ import curses
 
 # local imports
 import dropfile
-import config.py
 from colormap import ColorMap
 from hands import Hand
 from card_selection import CardSelect
@@ -24,10 +23,9 @@ class Render(object):
     Initialize curses and display all the game window elements
     '''
     def __init__(self):
-        self.ud = UserData
+        self.ud = UserData()
         self.sd = SystemData()
         self.username = dropfile.process_dropfile("door.sys", "DOORSYS")
-        config.init_pytjp_ini("settings.ini")
         self.stdscr = curses.initscr()
         curses.noecho()
         curses.cbreak()
@@ -49,11 +47,11 @@ class Render(object):
         self.stdscr.bkgd(self.cmap.colors['black_card'])
         self.stdscr.clear()
         self.stdscr.refresh()
-        max_plays = self.sd.get_plays()
-        max_games = self.sd.get_games()
-        num_games = self.ud.get_games(self.username)
+        self.sd.get_plays()
+        self.sd.get_games()
+        self.ud.get_games(self.username)
 
-        if num_games == 0:
+        if self.ud.userdata['games'] == 0:
             # Out of plays for the day
             self.shutdown()
 
